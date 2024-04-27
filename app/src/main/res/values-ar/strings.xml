@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_to_be_diacritize">النص المراد تشكيله</string>
+    <string name="enter_text_to_diacritize">الرجاء إدخال النص المراد تشكيله…</string>
+    <string name="text_after_diacritization">النص بعد التشكيل</string>
+    <string name="diacritize_text">شكّل النص</string>
+</resources>

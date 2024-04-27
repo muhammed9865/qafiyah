@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name" translatable="false">شكل لي</string>
+    <string name="text_to_be_diacritize">Text to be diacritize</string>
+    <string name="enter_text_to_diacritize">Please enter the text to be diacritize…</string>
+    <string name="text_after_diacritization">Text after diacritization</string>
+    <string name="diacritize_text">Diacritize Text</string>
+</resources>
