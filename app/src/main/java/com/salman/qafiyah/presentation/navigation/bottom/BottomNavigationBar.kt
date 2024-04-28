@@ -3,7 +3,6 @@ package com.salman.qafiyah.presentation.navigation.bottom
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -38,7 +37,6 @@ fun BottomNavigationBar() {
     val backStack by navigator.currentBackStackEntryAsState()
     val currentRoute = backStack?.destination?.route
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primary
     ) {
         items.forEach {
             BottomNavigationItem(
@@ -73,9 +71,6 @@ private fun RowScope.BottomNavigationItem(
         },
         label = { Text(text = title) },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-            selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-            indicatorColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
 }
