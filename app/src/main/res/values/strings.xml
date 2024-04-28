@@ -6,4 +6,5 @@
     <string name="diacritize_text">Diacritize Text</string>
     <string name="home">Home</string>
     <string name="settings">Settings</string>
+    <string name="font_size">Font Size</string>
 </resources>

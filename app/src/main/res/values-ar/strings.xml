@@ -6,4 +6,5 @@
     <string name="diacritize_text">شكّل النص</string>
     <string name="home">الرئيسية</string>
     <string name="settings">الإعدادات</string>
+    <string name="font_size">حجم الخط</string>
 </resources>

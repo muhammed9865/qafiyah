@@ -1,7 +1,10 @@
 package com.salman.qafiyah.data.di
 
 import com.salman.qafiyah.data.recognizer.SpeechRecognizerImpl
+import com.salman.qafiyah.data.repository.SettingsRepositoryImpl
 import com.salman.qafiyah.data.repository.SpeechRecognitionRepositoryImpl
+import com.salman.qafiyah.data.source.LocalSettingsDataSource
+import com.salman.qafiyah.domain.repository.SettingsRepository
 import com.salman.qafiyah.domain.repository.SpeechRecognitionRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -15,7 +18,15 @@ val repositoryModule = module {
         SpeechRecognizerImpl(androidContext())
     }
 
+    single<LocalSettingsDataSource> {
+        LocalSettingsDataSource(androidContext())
+    }
+
     single<SpeechRecognitionRepository> {
         SpeechRecognitionRepositoryImpl(get())
+    }
+
+    single<SettingsRepository> {
+        SettingsRepositoryImpl(get())
     }
 }
