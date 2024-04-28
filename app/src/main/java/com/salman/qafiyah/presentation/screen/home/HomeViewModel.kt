@@ -1,5 +1,6 @@
 package com.salman.qafiyah.presentation.screen.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salman.qafiyah.domain.model.SpeechRecognitionState
@@ -7,7 +8,9 @@ import com.salman.qafiyah.domain.repository.SpeechRecognitionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -44,6 +47,7 @@ class HomeViewModel(
     private fun listenForSpeechRecognitionStateChange() {
         speechRecognitionRepository.recognitionStateFlow
             .onEach { state ->
+                Log.d("HomeViewModel", "listenForSpeechRecognitionStateChange: $state")
                 when (state) {
                     is SpeechRecognitionState.Started -> {
                         mutableState.update { it.copy(isVoiceRecordingRunning = true) }
@@ -67,8 +71,12 @@ class HomeViewModel(
                             )
                         }
                     }
+                    else -> { /* idle state */ }
                 }
-            }.launchIn(viewModelScope)
+            }
+            .onStart { Log.d("HomeViewModel", "listenForSpeechRecognitionStateChange: started listening") }
+            .onCompletion { Log.d("HomeViewModel", "listenForSpeechRecognitionStateChange: stopped listening") }
+            .launchIn(viewModelScope)
     }
 
 }

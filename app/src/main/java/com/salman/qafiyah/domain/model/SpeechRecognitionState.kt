@@ -8,4 +8,5 @@ sealed class SpeechRecognitionState {
     data object Started : SpeechRecognitionState()
     data class Recognized(val text: String) : SpeechRecognitionState()
     data class Error(val message: String) : SpeechRecognitionState()
+    data object Idle : SpeechRecognitionState()
 }

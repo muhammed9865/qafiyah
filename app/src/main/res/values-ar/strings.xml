@@ -4,4 +4,6 @@
     <string name="enter_text_to_diacritize">الرجاء إدخال النص المراد تشكيله…</string>
     <string name="text_after_diacritization">النص بعد التشكيل</string>
     <string name="diacritize_text">شكّل النص</string>
+    <string name="home">الرئيسية</string>
+    <string name="settings">الإعدادات</string>
 </resources>

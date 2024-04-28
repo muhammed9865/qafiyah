@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -55,6 +56,12 @@ fun HomeScreen(
         }
     }
 
+    DisposableEffect(key1 = Unit) {
+        onDispose {
+            viewModel.stopRecording()
+        }
+    }
+
     Screen {
         Column(
             Modifier.fillMaxSize(),
@@ -76,9 +83,8 @@ fun HomeScreen(
                     )
                 },
                 onActionClicked = {
-                    if (!state.isVoiceRecordingRunning) permissionLauncher.launch(
-                        AUDIO_PERMISSION
-                    )
+                    if (!state.isVoiceRecordingRunning)
+                        permissionLauncher.launch(AUDIO_PERMISSION)
                 }
             )
             Button(

@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.salman.qafiyah.R
 import com.salman.qafiyah.presentation.navigation.LocalNavigator
@@ -29,8 +30,8 @@ fun BottomNavigationBar() {
     )
 
     val items = listOf(
-        NavigationData(title = "الرئيسية", R.drawable.ic_home, MainGraph.Routes.home),
-        NavigationData(title = "الإعدادات", R.drawable.ic_settings, MainGraph.Routes.settings),
+        NavigationData(title = stringResource(R.string.home), R.drawable.ic_home, MainGraph.Routes.home),
+        NavigationData(title = stringResource(R.string.settings), R.drawable.ic_settings, MainGraph.Routes.settings),
     )
 
     val navigator = LocalNavigator.current
