@@ -1,6 +1,7 @@
 package com.salman.qafiyah.presentation.di
 
 import com.salman.qafiyah.presentation.screen.home.HomeViewModel
+import com.salman.qafiyah.presentation.screen.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -10,5 +11,8 @@ import org.koin.dsl.module
 val viewModelsModule = module {
     viewModel<HomeViewModel> {
         HomeViewModel(get())
+    }
+    viewModel<SettingsViewModel> {
+        SettingsViewModel(get())
     }
 }

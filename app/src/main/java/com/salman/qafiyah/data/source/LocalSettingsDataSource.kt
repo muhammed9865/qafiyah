@@ -34,11 +34,10 @@ class LocalSettingsDataSource(
             }
         }
 
-    fun getFontScale(): Float {
+    fun getSettings(): Settings {
         val sharedPreferences = context.getSharedPreferences(SETTINGS_PREF, Context.MODE_PRIVATE)
-        return sharedPreferences.getFloat(KEY_FONT_SCALE, 1.0f)
+        return Settings(sharedPreferences.getFloat(KEY_FONT_SCALE, 1.0f))
     }
-
     fun setFontScale(scale: Float) {
         val sharedPreferences = context.getSharedPreferences(SETTINGS_PREF, Context.MODE_PRIVATE)
         sharedPreferences.edit().putFloat(KEY_FONT_SCALE, scale).apply()

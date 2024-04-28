@@ -11,26 +11,25 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.salman.qafiyah.R
 import com.salman.qafiyah.presentation.composable.Screen
 import com.salman.qafiyah.presentation.theme.QafiyahTheme
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 4/27/2024.
  */
 @Composable
-fun SettingsScreen() {
-    var scale by remember {
-        mutableFloatStateOf(1f)
-    }
+fun SettingsScreen(
+    viewModel: SettingsViewModel = koinViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     Screen {
         Column {
             Text(
@@ -39,8 +38,8 @@ fun SettingsScreen() {
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.height(24.dp))
-            FontScaleSlider(scale = scale) {
-                scale = it
+            FontScaleSlider(scale = state.scale) {
+                viewModel.setFontScale(it)
             }
         }
     }

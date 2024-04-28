@@ -10,4 +10,5 @@ interface SettingsRepository {
 
     val settingsFlow: Flow<Settings>
     suspend fun updateFontScale(scale: Float)
+    suspend fun getSettings(): Settings
 }
