@@ -140,7 +140,7 @@ private fun Section(
                     Text(
                         text = hint,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
 
                 IconButton(
@@ -174,7 +174,9 @@ private fun DiacritizeContent(
                 BasicTextField(
                     value = text, onValueChange = onTextChanged,
                     modifier = Modifier.fillMaxSize(),
-                    textStyle = MaterialTheme.typography.bodyLarge,
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                 )
         }
     }
