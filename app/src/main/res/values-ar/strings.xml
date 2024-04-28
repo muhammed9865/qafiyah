@@ -7,4 +7,5 @@
     <string name="home">الرئيسية</string>
     <string name="settings">الإعدادات</string>
     <string name="font_size">حجم الخط</string>
+    <string name="diacritized_text">النص المشكل</string>
 </resources>

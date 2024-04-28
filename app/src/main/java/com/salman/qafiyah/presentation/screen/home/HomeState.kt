@@ -8,7 +8,8 @@ data class HomeState(
     val textAfterDiacritization: String = "",
     val isVoiceRecordingRunning: Boolean = false,
     val isDiacritizationRunning: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isTextCopied: Boolean = false,
 ) {
     val showToBeDiacritizedHint: Boolean
         get() = textToBeDiacritized.isBlank() && !isVoiceRecordingRunning
