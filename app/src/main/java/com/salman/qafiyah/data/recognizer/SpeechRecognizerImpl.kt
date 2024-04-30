@@ -72,6 +72,8 @@ class SpeechRecognizerImpl(
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
             )
             putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.packageName)
+            putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", arrayOf<String>())
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ar-EG")
         }
     }
 
