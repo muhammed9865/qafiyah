@@ -1,9 +1,11 @@
 package com.salman.qafiyah.data.di
 
 import com.salman.qafiyah.data.recognizer.SpeechRecognizerImpl
+import com.salman.qafiyah.data.repository.ClipboardRepositoryImpl
 import com.salman.qafiyah.data.repository.SettingsRepositoryImpl
 import com.salman.qafiyah.data.repository.SpeechRecognitionRepositoryImpl
 import com.salman.qafiyah.data.source.LocalSettingsDataSource
+import com.salman.qafiyah.domain.repository.ClipboardRepository
 import com.salman.qafiyah.domain.repository.SettingsRepository
 import com.salman.qafiyah.domain.repository.SpeechRecognitionRepository
 import org.koin.android.ext.koin.androidContext
@@ -28,5 +30,9 @@ val repositoryModule = module {
 
     single<SettingsRepository> {
         SettingsRepositoryImpl(get())
+    }
+
+    single<ClipboardRepository> {
+        ClipboardRepositoryImpl(androidContext())
     }
 }

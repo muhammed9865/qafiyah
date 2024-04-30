@@ -17,4 +17,8 @@ class SettingsRepositoryImpl(
     override suspend fun updateFontScale(scale: Float) {
         settingsDataSource.setFontScale(scale)
     }
+
+    override suspend fun getSettings(): Settings {
+        return settingsDataSource.getSettings()
+    }
 }

@@ -1,6 +1,8 @@
 package com.salman.qafiyah.presentation.screen.home
 
 import android.app.Activity
+import android.speech.SpeechRecognizer
+import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -55,10 +58,19 @@ fun HomeScreen(
             viewModel.startRecording()
         }
     }
+    val context = LocalContext.current
+    val shouldShowVoiceRecording = SpeechRecognizer.isRecognitionAvailable(context)
 
     DisposableEffect(key1 = Unit) {
         onDispose {
             viewModel.stopRecording()
+        }
+    }
+
+    LaunchedEffect(key1 = state.isTextCopied) {
+        if (state.isTextCopied) {
+            // Show a snackbar or toast
+            Toast.makeText(context, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -71,7 +83,7 @@ fun HomeScreen(
             Section(
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.text_to_be_diacritize),
-                actionIcon = R.drawable.ic_mic,
+                actionIcon = if (shouldShowVoiceRecording) R.drawable.ic_mic else null,
                 hint = stringResource(R.string.enter_text_to_diacritize),
                 showHint = state.showToBeDiacritizedHint,
                 content = {
@@ -97,7 +109,8 @@ fun HomeScreen(
             Section(
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.text_after_diacritization),
-                actionIcon = R.drawable.ic_clipboard
+                actionIcon = R.drawable.ic_clipboard,
+                onActionClicked = { viewModel.copyTextToClipboard() }
             )
             Spacer(modifier = Modifier.weight(0.2f))
         }
@@ -111,7 +124,7 @@ private fun Section(
     hint: String = "",
     showHint: Boolean = true,
     content: @Composable () -> Unit = {},
-    @DrawableRes actionIcon: Int,
+    @DrawableRes actionIcon: Int?,
     onActionClicked: () -> Unit = {},
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -143,15 +156,17 @@ private fun Section(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
 
-                IconButton(
-                    onClick = onActionClicked,
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Icon(painter = painterResource(id = actionIcon), contentDescription = hint)
+                actionIcon?.let {
+                    IconButton(
+                        onClick = onActionClicked,
+                        modifier = Modifier.align(Alignment.BottomEnd),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Icon(painter = painterResource(id = actionIcon), contentDescription = hint)
+                    }
                 }
             }
         }

@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salman.qafiyah.domain.model.SpeechRecognitionState
+import com.salman.qafiyah.domain.repository.ClipboardRepository
 import com.salman.qafiyah.domain.repository.SpeechRecognitionRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -18,7 +20,8 @@ import kotlinx.coroutines.launch
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 4/27/2024.
  */
 class HomeViewModel(
-    private val speechRecognitionRepository: SpeechRecognitionRepository
+    private val speechRecognitionRepository: SpeechRecognitionRepository,
+    private val clipboardRepository: ClipboardRepository,
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(HomeState())
@@ -41,6 +44,16 @@ class HomeViewModel(
     fun stopRecording() {
         viewModelScope.launch {
             speechRecognitionRepository.stopSpeechRecognition()
+        }
+    }
+
+    fun copyTextToClipboard() {
+        viewModelScope.launch {
+            val text = mutableState.value.textToBeDiacritized
+            val isCopied = clipboardRepository.copyToClipboard(text).isSuccess
+            mutableState.update { it.copy(isTextCopied = isCopied) }
+            delay(100) // to show the copied state for a while
+            mutableState.update { it.copy(isTextCopied = false) }
         }
     }
 
