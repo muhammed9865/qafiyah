@@ -10,6 +10,7 @@ data class HomeState(
     val textAfterDiacritization: List<DiacritizedLetter> = emptyList(),
     val isVoiceRecordingRunning: Boolean = false,
     val isDiacritizationRunning: Boolean = false,
+    val fontScale: Float = 1f,
     val error: String? = null,
     val isTextCopied: Boolean = false,
 ) {

@@ -10,7 +10,7 @@ import org.koin.dsl.module
  */
 val viewModelsModule = module {
     viewModel<HomeViewModel> {
-        HomeViewModel(get(), get(), get())
+        HomeViewModel(get(), get(), get(), get())
     }
     viewModel<SettingsViewModel> {
         SettingsViewModel(get())

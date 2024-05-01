@@ -39,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.salman.qafiyah.R
@@ -99,6 +98,7 @@ fun HomeScreen(
                         onStopRecording = { viewModel.stopRecording() },
                         onTextChanged = viewModel::onTextToBeDiacritizedChanged,
                         isRecordingVoice = state.isVoiceRecordingRunning,
+                        fontScale = state.fontScale,
                     )
                 },
                 onActionClicked = {
@@ -120,6 +120,7 @@ fun HomeScreen(
                 content = {
                     DiacritizedText(
                         letters = state.textAfterDiacritization,
+                        fontScale = state.fontScale
                     )
                 }
             )
@@ -189,6 +190,7 @@ private fun DiacritizeContent(
     modifier: Modifier = Modifier,
     text: String,
     isRecordingVoice: Boolean = true,
+    fontScale: Float,
     onStopRecording: () -> Unit = {},
     onTextChanged: (String) -> Unit,
 ) {
@@ -201,7 +203,8 @@ private fun DiacritizeContent(
                     value = text, onValueChange = onTextChanged,
                     modifier = Modifier.fillMaxSize(),
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize.times(fontScale)
                     ),
                 )
         }
@@ -211,6 +214,7 @@ private fun DiacritizeContent(
 @Composable
 private fun DiacritizedText(
     modifier: Modifier = Modifier,
+    fontScale: Float,
     letters: List<DiacritizedLetter>
 ) {
     val annotatedString = buildAnnotatedString {
@@ -234,6 +238,7 @@ private fun DiacritizedText(
     Text(
         text = letters.map { it.letter }.joinToString(""),
         modifier = modifier.fillMaxSize(),
+        fontSize = MaterialTheme.typography.bodyLarge.fontSize.times(fontScale),
     )
 }
 
@@ -252,25 +257,4 @@ private fun requestAudioPermission(
     }
 
     return permissionLauncher
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewDiacritizedText() {
-    val letters = listOf(
-        DiacritizedLetter('ا', Diacritic.Skipped),
-        DiacritizedLetter('ل', Diacritic.Skipped),
-        DiacritizedLetter('س', Diacritic.Skipped),
-        DiacritizedLetter('ل', Diacritic.Skipped),
-        DiacritizedLetter('ا', Diacritic.Skipped),
-        DiacritizedLetter('م', Diacritic.Skipped),
-        DiacritizedLetter(' ', Diacritic.Skipped),
-        DiacritizedLetter('ع', Diacritic.Skipped),
-        DiacritizedLetter('ل', Diacritic.Skipped),
-        DiacritizedLetter('ي', Diacritic.Skipped),
-        DiacritizedLetter('ك', Diacritic.Skipped),
-        DiacritizedLetter('م', Diacritic.Skipped)
-    )
-    DiacritizedText(letters = letters)
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.salman.qafiyah.domain.model.SpeechRecognitionState
 import com.salman.qafiyah.domain.repository.ClipboardRepository
+import com.salman.qafiyah.domain.repository.SettingsRepository
 import com.salman.qafiyah.domain.repository.SpeechRecognitionRepository
 import com.salman.qafiyah.domain.repository.TextDiacritizationRepository
 import kotlinx.coroutines.delay
@@ -24,6 +25,7 @@ class HomeViewModel(
     private val speechRecognitionRepository: SpeechRecognitionRepository,
     private val clipboardRepository: ClipboardRepository,
     private val diacritizationRepository: TextDiacritizationRepository,
+    private val settingsRepository: SettingsRepository,
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(HomeState())
@@ -31,6 +33,7 @@ class HomeViewModel(
 
     init {
         listenForSpeechRecognitionStateChange()
+        loadFontScale()
     }
 
     fun onTextToBeDiacritizedChanged(text: String) {
@@ -70,10 +73,22 @@ class HomeViewModel(
     fun copyTextToClipboard() {
         viewModelScope.launch {
             val text = mutableState.value.textAfterDiacritization
-            val isCopied = clipboardRepository.copyToClipboard(text.map { it.letter }.joinToString("")).isSuccess
+            val isCopied = clipboardRepository.copyToClipboard(text.map { it.letter }
+                .joinToString("")).isSuccess
             mutableState.update { it.copy(isTextCopied = isCopied) }
             delay(100) // to show the copied state for a while
             mutableState.update { it.copy(isTextCopied = false) }
+        }
+    }
+
+    private fun loadFontScale() {
+        viewModelScope.launch {
+            settingsRepository.getSettings().let { settings ->
+                Log.d("HomeViewModel", "loadFontScale: $settings")
+                mutableState.update {
+                    it.copy(fontScale = settings.fontScale)
+                }
+            }
         }
     }
 
