@@ -12,14 +12,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -34,11 +32,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.salman.qafiyah.R
+import com.salman.qafiyah.domain.model.Diacritic
+import com.salman.qafiyah.domain.model.DiacritizedLetter
+import com.salman.qafiyah.presentation.composable.SPrimaryButton
 import com.salman.qafiyah.presentation.composable.Screen
 import com.salman.qafiyah.presentation.composable.WavesAnimation
 import org.koin.androidx.compose.koinViewModel
@@ -99,18 +106,22 @@ fun HomeScreen(
                         permissionLauncher.launch(AUDIO_PERMISSION)
                 }
             )
-            Button(
+            SPrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.small,
-                contentPadding = PaddingValues(vertical = 16.dp),
-                onClick = { /*TODO*/ }) {
-                Text(text = stringResource(R.string.diacritize_text))
-            }
+                onClick = viewModel::diacritize,
+                text = stringResource(R.string.diacritize_text),
+                isLoading = state.isDiacritizationRunning,
+            )
             Section(
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.text_after_diacritization),
                 actionIcon = R.drawable.ic_clipboard,
-                onActionClicked = { viewModel.copyTextToClipboard() }
+                onActionClicked = { viewModel.copyTextToClipboard() },
+                content = {
+                    DiacritizedText(
+                        letters = state.textAfterDiacritization,
+                    )
+                }
             )
             Spacer(modifier = Modifier.weight(0.2f))
         }
@@ -198,6 +209,35 @@ private fun DiacritizeContent(
 }
 
 @Composable
+private fun DiacritizedText(
+    modifier: Modifier = Modifier,
+    letters: List<DiacritizedLetter>
+) {
+    val annotatedString = buildAnnotatedString {
+        letters.forEach { letter ->
+            val color = when (letter.diacriticStatus) {
+                Diacritic.Added -> Color.Green
+                Diacritic.Corrected -> Color.Yellow
+                Diacritic.Skipped -> Color.Black
+            }
+            withStyle(
+                style = SpanStyle(
+                    color = color,
+                    fontSize = 20.sp
+                )
+            ) {
+                append(letter.letter.toString())
+            }
+        }
+    }
+
+    Text(
+        text = letters.map { it.letter }.joinToString(""),
+        modifier = modifier.fillMaxSize(),
+    )
+}
+
+@Composable
 private fun requestAudioPermission(
     onShowRationaleDialog: () -> Unit = {},
     onResult: (Boolean) -> Unit
@@ -212,4 +252,25 @@ private fun requestAudioPermission(
     }
 
     return permissionLauncher
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewDiacritizedText() {
+    val letters = listOf(
+        DiacritizedLetter('ا', Diacritic.Skipped),
+        DiacritizedLetter('ل', Diacritic.Skipped),
+        DiacritizedLetter('س', Diacritic.Skipped),
+        DiacritizedLetter('ل', Diacritic.Skipped),
+        DiacritizedLetter('ا', Diacritic.Skipped),
+        DiacritizedLetter('م', Diacritic.Skipped),
+        DiacritizedLetter(' ', Diacritic.Skipped),
+        DiacritizedLetter('ع', Diacritic.Skipped),
+        DiacritizedLetter('ل', Diacritic.Skipped),
+        DiacritizedLetter('ي', Diacritic.Skipped),
+        DiacritizedLetter('ك', Diacritic.Skipped),
+        DiacritizedLetter('م', Diacritic.Skipped)
+    )
+    DiacritizedText(letters = letters)
 }

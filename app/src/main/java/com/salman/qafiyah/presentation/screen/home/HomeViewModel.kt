@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.salman.qafiyah.domain.model.SpeechRecognitionState
 import com.salman.qafiyah.domain.repository.ClipboardRepository
 import com.salman.qafiyah.domain.repository.SpeechRecognitionRepository
+import com.salman.qafiyah.domain.repository.TextDiacritizationRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val speechRecognitionRepository: SpeechRecognitionRepository,
     private val clipboardRepository: ClipboardRepository,
+    private val diacritizationRepository: TextDiacritizationRepository,
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(HomeState())
@@ -47,10 +49,28 @@ class HomeViewModel(
         }
     }
 
+    fun diacritize() {
+        viewModelScope.launch {
+            mutableState.update {
+                it.copy(isDiacritizationRunning = true)
+            }
+
+            val text = mutableState.value.textToBeDiacritized
+            val diacritizedText = diacritizationRepository.diacritizeTextWithStatus(text)
+
+            mutableState.update {
+                it.copy(
+                    textAfterDiacritization = diacritizedText,
+                    isDiacritizationRunning = false
+                )
+            }
+        }
+    }
+
     fun copyTextToClipboard() {
         viewModelScope.launch {
-            val text = mutableState.value.textToBeDiacritized
-            val isCopied = clipboardRepository.copyToClipboard(text).isSuccess
+            val text = mutableState.value.textAfterDiacritization
+            val isCopied = clipboardRepository.copyToClipboard(text.map { it.letter }.joinToString("")).isSuccess
             mutableState.update { it.copy(isTextCopied = isCopied) }
             delay(100) // to show the copied state for a while
             mutableState.update { it.copy(isTextCopied = false) }
@@ -84,11 +104,23 @@ class HomeViewModel(
                             )
                         }
                     }
-                    else -> { /* idle state */ }
+
+                    else -> { /* idle state */
+                    }
                 }
             }
-            .onStart { Log.d("HomeViewModel", "listenForSpeechRecognitionStateChange: started listening") }
-            .onCompletion { Log.d("HomeViewModel", "listenForSpeechRecognitionStateChange: stopped listening") }
+            .onStart {
+                Log.d(
+                    "HomeViewModel",
+                    "listenForSpeechRecognitionStateChange: started listening"
+                )
+            }
+            .onCompletion {
+                Log.d(
+                    "HomeViewModel",
+                    "listenForSpeechRecognitionStateChange: stopped listening"
+                )
+            }
             .launchIn(viewModelScope)
     }
 

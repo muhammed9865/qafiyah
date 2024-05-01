@@ -4,10 +4,13 @@ import com.salman.qafiyah.data.recognizer.SpeechRecognizerImpl
 import com.salman.qafiyah.data.repository.ClipboardRepositoryImpl
 import com.salman.qafiyah.data.repository.SettingsRepositoryImpl
 import com.salman.qafiyah.data.repository.SpeechRecognitionRepositoryImpl
+import com.salman.qafiyah.data.repository.TextDiacritizationRepositoryImpl
+import com.salman.qafiyah.data.source.DiacritizationRemoteSource
 import com.salman.qafiyah.data.source.LocalSettingsDataSource
 import com.salman.qafiyah.domain.repository.ClipboardRepository
 import com.salman.qafiyah.domain.repository.SettingsRepository
 import com.salman.qafiyah.domain.repository.SpeechRecognitionRepository
+import com.salman.qafiyah.domain.repository.TextDiacritizationRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -34,5 +37,10 @@ val repositoryModule = module {
 
     single<ClipboardRepository> {
         ClipboardRepositoryImpl(androidContext())
+    }
+
+    single<TextDiacritizationRepository> {
+        val diacritizationSource = DiacritizationRemoteSource()
+        TextDiacritizationRepositoryImpl(diacritizationSource)
     }
 }
