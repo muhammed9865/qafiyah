@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -44,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import com.salman.qafiyah.R
 import com.salman.qafiyah.domain.model.Diacritic
 import com.salman.qafiyah.domain.model.DiacritizedLetter
+import com.salman.qafiyah.presentation.composable.ArabicTextField
 import com.salman.qafiyah.presentation.composable.SPrimaryButton
 import com.salman.qafiyah.presentation.composable.Screen
 import com.salman.qafiyah.presentation.composable.WavesAnimation
@@ -199,7 +199,7 @@ private fun DiacritizeContent(
             if (it) {
                 WavesAnimation(onIconClick = onStopRecording)
             } else
-                BasicTextField(
+                ArabicTextField(
                     value = text, onValueChange = onTextChanged,
                     modifier = Modifier.fillMaxSize(),
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
