@@ -20,7 +20,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".TestActivity"
             android:exported="true"
             android:theme="@style/Theme.Qafiyah">
             <intent-filter>
