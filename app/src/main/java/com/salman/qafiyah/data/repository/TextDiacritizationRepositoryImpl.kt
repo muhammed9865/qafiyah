@@ -12,11 +12,12 @@ class TextDiacritizationRepositoryImpl(
     private val remoteSource: DiacritizationRemoteSource,
 ) : TextDiacritizationRepository {
     override suspend fun diacritizeText(text: String): String {
-        return remoteSource.diacritizeText(text)
+        return runCatching { remoteSource.diacritizeText(text) }.getOrDefault(text)
     }
 
     override suspend fun diacritizeTextWithStatus(text: String): List<DiacritizedLetter> {
-        val diacritizedText = remoteSource.diacritizeText(text)
+
+        val diacritizedText = diacritizeText(text)
 
         return DiacritizationDiff()(text, diacritizedText)
     }

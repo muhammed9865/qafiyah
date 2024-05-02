@@ -12,7 +12,7 @@ import java.net.URL
  */
 class DiacritizationRemoteSource {
     companion object {
-        private const val BASE_URL = "http://10.0.2.2:5000"
+        private const val BASE_URL = "https://a517-197-35-34-14.ngrok-free.app"
         private const val TAG = "DiacritizationRemoteSou"
     }
 

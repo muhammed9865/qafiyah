@@ -27,21 +27,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.salman.qafiyah.R
-import com.salman.qafiyah.domain.model.Diacritic
 import com.salman.qafiyah.domain.model.DiacritizedLetter
 import com.salman.qafiyah.presentation.composable.ArabicTextField
 import com.salman.qafiyah.presentation.composable.SPrimaryButton
@@ -58,7 +52,7 @@ private const val AUDIO_PERMISSION = android.Manifest.permission.RECORD_AUDIO
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val permissionLauncher = requestAudioPermission { granted ->
         if (granted) {
             viewModel.startRecording()
@@ -204,7 +198,7 @@ private fun DiacritizeContent(
                     modifier = Modifier.fillMaxSize(),
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = MaterialTheme.typography.bodyLarge.fontSize.times(fontScale)
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize.times(fontScale),
                     ),
                 )
         }
@@ -217,24 +211,6 @@ private fun DiacritizedText(
     fontScale: Float,
     letters: List<DiacritizedLetter>
 ) {
-    val annotatedString = buildAnnotatedString {
-        letters.forEach { letter ->
-            val color = when (letter.diacriticStatus) {
-                Diacritic.Added -> Color.Green
-                Diacritic.Corrected -> Color.Yellow
-                Diacritic.Skipped -> Color.Black
-            }
-            withStyle(
-                style = SpanStyle(
-                    color = color,
-                    fontSize = 20.sp
-                )
-            ) {
-                append(letter.letter.toString())
-            }
-        }
-    }
-
     Text(
         text = letters.map { it.letter }.joinToString(""),
         modifier = modifier.fillMaxSize(),
